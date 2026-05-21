@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# 1. Install required packages
-sudo pacman -Syu --noconfirm git niri vim waybar alacritty fuzzel
+#!/bin/bash
 
-# 2. Clone the repository (replace URL with your actual repo)
-git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
+# 1. Clone the repository (replace URL with your actual repo)
+git clone https://github.com/SegusFaultise/dotfiles.git ~/.dotfiles
 
 # 3. Create target directories
 mkdir -p ~/.config/{niri,waybar,alacritty,fuzzel}
