@@ -1,0 +1,135 @@
+environment {
+    DISPLAY ":0"
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_SESSION_TYPE "wayland"
+
+    QT_QPA_PLATFORM "wayland"
+    GDK_BACKEND "wayland,x11"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+
+    GTK_THEME "Adwaita-dark"
+    XDG_CURRENT_DESKTOP "GNOME"
+}
+
+spawn-at-startup "kanshi"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "waybar"
+spawn-at-startup "mako"
+spawn-at-startup "mpvpaper -o 'loop no-audio video-unscaled=yes' '*' ~/.config/niri/wallpapers/gifs/CalculusLoop.mp4"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets"
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+        }
+    }
+    touchpad {
+        tap
+        natural-scroll
+    }
+    mouse {
+        accel-profile "flat"
+    }
+}
+
+layout {
+    background-color "#000000"
+    center-focused-column "never"
+
+    default-column-width { proportion 0.5; }
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    focus-ring {
+        off
+    }
+
+    border {
+        width 1
+        active-color "#000000"
+	  inactive-color "#000500"
+    }
+}
+
+window-rule {
+    match app-id="obsidian"
+    
+    open-maximized false
+    open-fullscreen false
+    
+    default-column-width { proportion 0.5; }
+}
+
+binds {
+    Mod+Return { spawn "alacritty"; }
+    Mod+Space  { spawn "fuzzel"; }
+    Mod+E      { spawn "files"; }
+    Mod+B      { spawn "microsoft-edge-stable"; }
+
+    Print { spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy"; }
+    Shift+Print { spawn "sh" "-c" "grim - | wl-copy"; }
+    Ctrl+Print { spawn "sh" "-c" "grim -g \"$(slurp)\" ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png && wl-copy < ~/Pictures/screenshot_$(date +%Y%m%d_%H%M%S).png"; }
+    Ctrl+Alt+L { spawn "swaylock-plugin" "-d" "--command" "mpvpaper -o '``--loop-file=inf' '*' ~/.config/niri/wallpapers/gifs/CalculusLoop.mp4"; }
+
+    // WINDOW MANAGEMENT
+    Mod+Q       { close-window; }
+    Mod+Left    { focus-column-left; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Right   { focus-column-right; }
+    Mod+H       { focus-column-left; }
+    Mod+L       { focus-column-right; }
+
+    // MOVING WINDOWS
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+
+    // Switch to the workspace above/below
+    Mod+Up   { focus-workspace-up; }
+    Mod+Down { focus-workspace-down; }
+
+    // Move the active window to the workspace above/below
+    Mod+Shift+Up   { move-window-to-workspace-up; }
+    Mod+Shift+Down { move-window-to-workspace-down; }
+    
+    // Move window to specific workspaces (1-9)
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    
+    // Move window to specific workspace
+    Mod+Shift+1 { move-window-to-workspace 1; }
+    Mod+Shift+2 { move-window-to-workspace 2; }
+    Mod+Shift+3 { move-window-to-workspace 3; }
+    Mod+Shift+4 { move-window-to-workspace 4; }
+    Mod+Shift+5 { move-window-to-workspace 5; }
+    Mod+Shift+6 { move-window-to-workspace 6; }
+    Mod+Shift+7 { move-window-to-workspace 7; }
+    Mod+Shift+8 { move-window-to-workspace 8; }
+    Mod+Shift+9 { move-window-to-workspace 9; }
+
+    // SCROLLING THE STRIP (Niri Speciality)
+    Mod+WheelScrollDown { focus-column-right; }
+    Mod+WheelScrollUp   { focus-column-left; }
+
+    // SYSTEM
+    Mod+Shift+E { quit; }
+    Mod+Shift+R { power-off-monitors; }
+    
+    // VOLUME / BRIGHTNESS
+    XF86AudioRaiseVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"; }
+    XF86AudioLowerVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+    XF86AudioMute        { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+}

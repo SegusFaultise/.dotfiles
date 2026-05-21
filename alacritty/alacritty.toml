@@ -1,0 +1,21 @@
+[general]
+import = [
+    "~/.config/alacritty/themes/themes/cyber_punk_neon.toml"
+
+]
+live_config_reload = true
+
+[window]
+opacity = 1
+padding.x = 4
+decorations = "None"
+decorations_theme_variant = "Dark"
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+
+[colors.primary]
+background = "#062625"
+
+[terminal.shell]
+program = "/usr/bin/zsh"

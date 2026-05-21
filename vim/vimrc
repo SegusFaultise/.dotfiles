@@ -1,0 +1,112 @@
+"Plugin Management (vim-plug)
+let data_dir = '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+call plug#end()
+
+"Core Editor Settings
+set lazyredraw     
+set ttyfast        
+set updatetime=300 
+
+"Backup and Undo
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+set undofile
+
+"Search
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+"UI and Theming
+syntax enable
+if has('termguicolors')
+  set termguicolors
+endif
+colorscheme naysayer
+
+set number
+set fillchars+=eob:\ 
+
+"Formatting and Indentation
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
+set smartindent
+filetype plugin indent on
+
+"Language Server Protocol (LSP)
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> K <plug>(lsp-hover)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+endfunction
+
+augroup lsp_install
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+augroup LspFormat
+    autocmd!
+    autocmd BufWritePre * LspDocumentFormatSync
+augroup END
+
+let g:lsp_settings = {
+\  'clangd': {
+\    'args': ['--background-index', '--clang-tidy']
+\  },
+\  'pyright-langserver': {
+\    'workspace_config': {
+\      'python': {
+\        'analysis': {
+\          'typeCheckingMode': 'strict'
+\        }
+\      }
+\    }
+\  }
+\}
+
+"LSP Diagnostics
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_virtual_text_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_signs_enabled = 1
+let g:lsp_diagnostics_signs_error = {'text': 'E'}
+let g:lsp_diagnostics_signs_warning = {'text': 'W'}
+let g:lsp_diagnostics_signs_information = {'text': 'I'}
+let g:lsp_diagnostics_signs_hint = {'text': 'H'}
+
+"Autocompletion (asyncomplete)
+set completeopt=menuone,noinsert,noselect
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+inoremap <expr> <c-space> asyncomplete#force_refresh()
+
+"Fuzzy Finder (FZF)
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+nnoremap <Space><Space> :Files<CR>
+nnoremap <C-b> :Buffers<CR>
+nnoremap <Leader>f :Rg<CR>

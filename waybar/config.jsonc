@@ -1,0 +1,95 @@
+{
+  "layer": "top",
+  "position": "left",
+  "width": 55,
+  "spacing": 0,
+  "modules-left": [
+    "niri/workspaces"
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "group/hardware",
+    "clock",
+    "tray"
+  ],
+  "niri/workspaces": {
+    "format": "{index}",
+    "format-icons": {}
+  },
+  "group/hardware": {
+    "orientation": "vertical",
+    "modules": [
+      "cpu",
+      "memory",
+      "pulseaudio",
+      "battery",
+      "network"
+    ]
+  },
+  "cpu": {
+    "interval": 5,
+    "format": "\n{icon}",
+    "format-icons": [
+      "░░░░",
+      "█░░░",
+      "██░░",
+      "███░",
+      "████"
+    ],
+    "tooltip-format": "CPU {usage}%",
+    "on-click": "alacritty -e btop"
+  },
+  "memory": {
+    "interval": 10,
+    "format": "\n{icon}",
+    "format-icons": [
+      "░░░░",
+      "█░░░",
+      "██░░",
+      "███░",
+      "████"
+    ],
+    "tooltip-format": "MEM {percentage}%",
+    "on-click": "alacritty -e btop"
+  },
+  "pulseaudio": {
+    "format": "\n{icon}",
+    "format-muted": "󰝟\nMUTE",
+    "format-icons": [
+      "░░░░",
+      "█░░░",
+      "██░░",
+      "███░",
+      "████"
+    ],
+    "tooltip": false,
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "format": "\n{icon}",
+    "format-icons": [
+      "░░░░",
+      "█░░░",
+      "██░░",
+      "███░",
+      "████"
+    ],
+    "tooltip-format": "BAT {capacity}%"
+  },
+  "network": {
+    "interval": 5,
+    "format-wifi": "\nWIFI", // Icon top, Text bottom
+    "format-ethernet": "󰈀\nETH", // Icon top, Text bottom
+    "format-disconnected": "⚠\nOFF", // Icon top, Text bottom
+    "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+    "on-click": "alacritty -e nmtui" // Optional: Opens network manager on click
+  },
+  "clock": {
+    "format": "{:%H\n%M}",
+    "tooltip-format": "{:%Y-%m-%d}"
+  },
+  "tray": {
+    "icon-size": 13,
+    "spacing": 10
+  }
+}
